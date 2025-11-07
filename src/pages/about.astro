@@ -1,0 +1,46 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import Layout from '../layouts/BlogPost.astro';
+import GlowLineSeparator from '@/components/ui/separator/GlowLineSeparator.astro';
+const pageTitle = 'Berserk Arch | About';
+const pageDescription = 'Learn more about my background and approach to software engineering.';
+---
+
+<MainLayout title={pageTitle} description={pageDescription}>
+<section class="py-12">
+      <div class="text-center my-12">
+        <h1 class="text-4xl font-bold mb-4">Berserk Arch Linux</h1>
+        <p class="text-lg text-gray-400">
+          A minimal, fast, and hacker-ready Arch Linux distribution — built for security researchers, developers, and power users.
+        </p>
+      </div>
+
+      <div class="mb-12">
+        <h2 class="text-2xl font-semibold mb-3">About</h2>
+        <p class="text-gray-400 leading-relaxed">
+          Berserk Arch is a lightweight, Arch-based Linux distribution designed for hackers,
+          researchers, and developers who value speed, control, and reliability. At its core, it
+          follows the Arch philosophy — minimal by default, infinitely customizable — but adds
+          carefully chosen optimizations and tooling for security professionals and power users.
+        </p>
+        <p class="text-gray-400 leading-relaxed mt-4">
+          Whether you’re setting up a disposable red-team lab, coding in a distraction-free
+          environment, or running a rock-solid daily driver, Berserk Arch provides a clean foundation
+          with the flexibility to scale it your way.
+        </p>
+      </div>
+
+      {/* Highlights */}
+      <div>
+        <h2 class="text-2xl font-semibold mb-6">Why Berserk Arch?</h2>
+        <ul class="space-y-3 text-gray-300">
+          <li>⚡ <span class="font-semibold">Minimal by Design</span> — No bloat. Start small, add only what you need.</li>
+          <li>🚀 <span class="font-semibold">Performance Tuned</span> — Fast boot, optimized init, zstd compression, zram swap.</li>
+          <li>🛡️ <span class="font-semibold">Hacker Ready</span> — Pre-configured with red-team and dev tooling profiles.</li>
+          <li>📦 <span class="font-semibold">Powered by Arch</span> — Rolling release, Pacman speed, and AUR flexibility.</li>
+          <li>🔒 <span class="font-semibold">Reliable & Reproducible</span> — Signed ISOs, reproducible builds, rollback support.</li>
+          <li>💻 <span class="font-semibold">VM Friendly</span> — Optimized for QEMU/KVM, VMware, and VirtualBox.</li>
+        </ul>
+      </div>
+</section>
+</MainLayout>

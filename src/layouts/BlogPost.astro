@@ -1,0 +1,104 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "../components/FormattedDate.astro";
+import PostMeta from "../components/ui/meta/PostMeta.astro";
+import ShareButtons from "../components/ui/share/ShareButtons.astro";
+import PostNav from "../components/ui/nav/PostNav.astro";
+import MainLayout from "./MainLayout.astro";
+
+type BlogData = CollectionEntry<"blog">["data"];
+type Props = BlogData & {
+  showHeader?: boolean;
+  prevPost?: { id: string; title: string } | null;
+  nextPost?: { id: string; title: string } | null;
+  readingTimeMin?: number;
+};
+
+const {
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  heroImage,
+  tags,
+  showHeader = true,
+  prevPost = null,
+  nextPost = null,
+  readingTimeMin = 0,
+} = Astro.props as Props;
+---
+
+<MainLayout
+  title={title}
+  description={description}
+  image={heroImage}
+  type="article"
+  articleMeta={{
+    publishedTime: pubDate,
+    modifiedTime: updatedDate,
+    author: Astro.props.author || "Gaurav Raj",
+    tags: tags || [],
+  }}
+>
+  <main class="w-full max-w-[1280px] mx-auto px-4 mt-16">
+    <article>
+      {
+        showHeader && heroImage && (
+          <div class="flex justify-center mb-8 mt-8">
+            <Image
+              class="max-w-[1020px] h-auto rounded-xl shadow-lg"
+              width={1020}
+              height={510}
+              src={heroImage}
+              alt={title}
+            />
+          </div>
+        )
+      }
+      <div class="max-w-[870px] mx-auto px-2">
+        {
+          showHeader && (
+            <div class="mb-8 pb-6 text-center border-b border-gray-700">
+              <div class="text-sm text-gray-400 mb-4">
+                <FormattedDate date={pubDate} />
+                {updatedDate && (
+                  <div class="italic mt-2">
+                    Last updated on <FormattedDate date={updatedDate} />
+                  </div>
+                )}
+              </div>
+              <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                {title}
+              </h1>
+              {tags && tags.length > 0 && (
+                <div class="flex gap-2 flex-wrap justify-center pb-3">
+                  {tags.map((t) => (
+                    <a
+                      href={`/blog/tag/${t.replace(/\s+/g, "-").toLowerCase()}/`}
+                      class="px-3 py-1 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-full transition-colors duration-200"
+                    >
+                      {t}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          )
+        }
+        <ShareButtons title={title} url={Astro.url.toString()} />
+        <PostMeta
+          pubDate={pubDate}
+          readingTimeMin={readingTimeMin}
+          authorName={Astro.props.author || "Gaurav Raj"}
+        />
+        <div
+          class="text-gray-300 text-lg leading-relaxed [&>h2]:text-3xl [&>h2]:font-bold [&>h2]:text-white [&>h2]:mt-8 [&>h2]:mb-4 [&>h3]:text-2xl [&>h3]:font-semibold [&>h3]:text-white [&>h3]:mt-6 [&>h3]:mb-3 [&>p]:mb-4 [&>ul]:mb-4 [&>ul]:list-disc [&>ul]:pl-6 [&>ol]:mb-4 [&>ol]:list-decimal [&>ol]:pl-6 [&>li]:mb-2 [&>pre]:mb-4 [&>pre]:p-4 [&>pre]:rounded-lg [&>pre]:overflow-x-auto [&>code]:text-sm [&>code]:bg-gray-800 [&>code]:px-1 [&>code]:py-0.5 [&>code]:rounded [&>a]:text-blue-400 [&>a]:hover:text-blue-300 [&>a]:underline [&>blockquote]:border-l-4 [&>blockquote]:border-gray-600 [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-gray-400"
+        >
+          <slot />
+        </div>
+        <PostNav prev={prevPost} next={nextPost} />
+      </div>
+    </article>
+  </main>
+</MainLayout>

@@ -1,0 +1,42 @@
+---
+import Carousel from '../ui/carousel/Carousel.astro';
+import { logos } from '../../data/logos';
+interface FeatureItem {
+  icon: string; // inline SVG
+  title: string;
+  description: string;
+}
+
+interface Props {
+  title?: string;
+  features: FeatureItem[];
+}
+
+const { title, features } = Astro.props as Props;
+---
+
+<section class="w-full py-8 mt-24">
+  <div class="mx-auto max-w-8xl px-4">
+    {title && (
+      <h2 class="text-3xl md:text-4xl font-semibold text-center mb-6 text-foreground">{title}</h2>
+    )}
+  
+    <div class="mb-14">
+      <Carousel tools={logos} />
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-8xl mx-auto">
+      {features.map((feature) => (
+        <div class="card-surface p-6 group transition-transform duration-200 hover:-translate-y-1 hover:elevate-lg">
+          <div class="flex flex-col items-center text-center">
+            <div class="mb-4 rounded-xl size-[48px] flex items-center justify-center text-[var(--accent)] opacity-90 transition-all duration-300 will-change-transform group-hover:scale-110 group-hover:opacity-100 [&>svg]:w-6 [&>svg]:h-6" style="background: rgba(var(--accent-rgb),0.08);" set:html={feature.icon} />
+            <h3 class="text-xl font-semibold text-foreground mb-2">{feature.title}</h3>
+            <p class="text-[color:var(--color-text-muted)] leading-relaxed max-w-prose">{feature.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+
