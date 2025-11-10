@@ -1,6 +1,6 @@
 ---
 import HeaderLink from "./HeaderLink.astro";
-import Button from "../ui/button/Button.astro";
+import DownloadBtn from "../ui/button/DownloadBtn.astro";
 ---
 
 <header class="bg-transparent text-foreground border-b sw-header">
@@ -82,12 +82,29 @@ import Button from "../ui/button/Button.astro";
             ></path></svg
           >
         </a>
-        <Button
-          href="https://drive.google.com/drive/folders/14sOpnU4iMUeivxWvj9rvctVFgGUbXiAq"
-          class="ml-2"
+        <DownloadBtn
+          label="Download"
           variant="primary"
-          size="md">Download</Button
-        >
+          size="md"
+          options={[
+            {
+              text: "Default",
+              href: "/download",
+            },
+            {
+              text: "SourceForge",
+              href: "https://sourceforge.net/projects/berserkarch/files/",
+            },
+            {
+              text: "Google Drive",
+              href: "https://drive.google.com/drive/folders/14sOpnU4iMUeivxWvj9rvctVFgGUbXiAq",
+            },
+            {
+              text: "Torrent",
+              href: "/torrent",
+            },
+          ]}
+        />
       </div>
       <button
         type="button"
