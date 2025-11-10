@@ -1,0 +1,55 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/sections/Header.astro";
+import Footer from "../components/sections/Footer.astro";
+
+interface Props {
+  file: string;
+}
+
+const { file } = Astro.props as Props;
+---
+
+<html lang="en" data-theme="dark" class="dark">
+  <head>
+    <BaseHead
+      title="Berserk Arch | Downloads"
+      description="Download page for BerserkArch for latest of our stuffs"
+    />
+  </head>
+  <body
+    style="background: radial-gradient(ellipse at top, #26282b 0%, #1d1e22 60%, #16171b 100%); background-attachment: fixed; background-size: 100vw 100vh;"
+  >
+    <Header />
+    <main class="mx-auto max-w-6xl px-4 py-16">
+      <section class="card-surface p-8 text-center space-y-4">
+        <p class="text-lg text-[color:var(--color-text-secondary)]">
+          Redirecting to the latest BerserkArch ISO...
+        </p>
+        <div class="mt-4 flex items-center justify-center gap-3">
+          <a href="/" class="sw-btn">Go to Home</a>
+          <a href="/blog/" class="sw-btn">Read the Blog</a>
+        </div>
+      </section>
+      <script define:vars={{ file }}>
+        (async () => {
+          try {
+            const res = await fetch(`https://iso.berserkarch.xyz/${file}.txt`, {
+              cache: "no-store",
+            });
+            if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
+            const link = (await res.text()).trim();
+            if (!/^https?:\/\//.test(link))
+              throw new Error("Invalid URL in latest.txt");
+            window.location.href = link;
+          } catch (err) {
+            console.error("Redirect failed:", err);
+            document.body.innerHTML =
+              "<p>⚠️ Unable to redirect. Please try again later.</p>";
+          }
+        })();
+      </script>
+    </main>
+    <Footer />
+  </body>
+</html>
