@@ -1,0 +1,32 @@
+---
+
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Redirecting...</title>
+  </head>
+  <body>
+    <p>Redirecting to the latest BerserkArch ISO...</p>
+    <script>
+      (async () => {
+        try {
+          const res = await fetch("https://iso.berserkarch.xyz/latest.txt", {
+            cache: "no-store",
+          });
+          if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
+          const link = (await res.text()).trim();
+          if (!/^https?:\/\//.test(link))
+            throw new Error("Invalid URL in latest.txt");
+          window.location.href = link;
+        } catch (err) {
+          console.error("Redirect failed:", err);
+          document.body.innerHTML =
+            "<p>⚠️ Unable to redirect. Please try again later.</p>";
+        }
+      })();
+    </script>
+  </body>
+</html>
