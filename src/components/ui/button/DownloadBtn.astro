@@ -1,0 +1,224 @@
+---
+interface DropdownOption {
+  text: string;
+  href: string;
+  icon?: string; // optional icon class or svg
+}
+
+interface Props {
+  label: string;
+  options: DropdownOption[];
+  variant?: "primary" | "secondary" | "ghost" | "outline";
+  size?: "sm" | "md" | "lg";
+  disabled?: boolean;
+  class?: string;
+  align?: "left" | "right";
+}
+
+const {
+  label,
+  options,
+  variant = "primary",
+  size = "md",
+  disabled = false,
+  class: className,
+  align = "left",
+  ...rest
+} = Astro.props as Props;
+
+const base =
+  "inline-flex items-center justify-center rounded-lg font-semibold starwind-transition-colors no-underline";
+const sizes: Record<string, string> = {
+  sm: "px-3 py-2 text-sm",
+  md: "px-4 py-2.5 text-base",
+  lg: "px-5 py-3 text-lg",
+};
+const variants: Record<string, string> = {
+  primary:
+    "text-white !text-white hover:!text-white focus:!text-white active:!text-white bg-[var(--primary)] hover:opacity-90 shadow-sm",
+  secondary:
+    "text-[var(--accent)] border border-[var(--accent)] bg-transparent hover:bg-[color:var(--color-accent-bg)]",
+  ghost:
+    "text-[color:var(--color-text-secondary)] bg-transparent hover:bg-[var(--accent)]/10",
+  outline:
+    "text-foreground border border-[var(--border)] bg-transparent hover:bg-[color:var(--color-bg-secondary)]",
+};
+
+const buttonClasses = [base, sizes[size], variants[variant], className]
+  .filter(Boolean)
+  .join(" ");
+const alignmentClass = align === "right" ? "right-0" : "left-0";
+---
+
+<div class="dropdown-wrapper" data-dropdown {...rest}>
+  <button
+    type="button"
+    class={buttonClasses}
+    aria-disabled={disabled ? "true" : undefined}
+    aria-haspopup="true"
+    aria-expanded="false"
+    data-dropdown-trigger
+  >
+    <span>{label}</span>
+    <svg
+      class="dropdown-icon"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M4 6L8 10L12 6"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"></path>
+    </svg>
+  </button>
+
+  <div class={`dropdown-menu ${alignmentClass}`} data-dropdown-menu>
+    {
+      options.map((option) => (
+        <a href={option.href} class="dropdown-item">
+          {option.icon && (
+            <span class="dropdown-item-icon" set:html={option.icon} />
+          )}
+          <span>{option.text}</span>
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown-icon {
+    margin-left: 0.5rem;
+    transition: transform 0.2s ease;
+  }
+
+  .dropdown-wrapper[data-open="true"] .dropdown-icon {
+    transform: rotate(180deg);
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    min-width: 200px;
+    background: var(--color-bg-primary, #ffffff);
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 0.5rem;
+    box-shadow:
+      0 4px 6px -1px rgb(0 0 0 / 0.1),
+      0 2px 4px -2px rgb(0 0 0 / 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-0.5rem);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      visibility 0.2s;
+    z-index: 50;
+  }
+
+  .dropdown-wrapper[data-open="true"] .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: var(--color-text-primary, #111827);
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+    border-bottom: 1px solid var(--border, #e5e7eb);
+  }
+
+  .dropdown-item:last-child {
+    border-bottom: none;
+  }
+
+  .dropdown-item:hover {
+    background-color: var(--color-bg-secondary, #f9fafb);
+  }
+
+  .dropdown-item:first-child {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
+
+  .dropdown-item:last-child {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+
+  .dropdown-item-icon {
+    margin-right: 0.5rem;
+    display: flex;
+    align-items: center;
+  }
+</style>
+
+<script>
+  function initDropdown() {
+    const dropdowns = document.querySelectorAll("[data-dropdown]");
+
+    dropdowns.forEach((dropdown) => {
+      const trigger = dropdown.querySelector("[data-dropdown-trigger]");
+      const menu = dropdown.querySelector("[data-dropdown-menu]");
+
+      if (!trigger || !menu) return;
+
+      // Toggle dropdown
+      trigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = dropdown.getAttribute("data-open") === "true";
+
+        // Close all other dropdowns
+        document.querySelectorAll("[data-dropdown]").forEach((d) => {
+          if (d !== dropdown) {
+            d.setAttribute("data-open", "false");
+            d.querySelector("[data-dropdown-trigger]")?.setAttribute(
+              "aria-expanded",
+              "false"
+            );
+          }
+        });
+
+        // Toggle current dropdown
+        dropdown.setAttribute("data-open", (!isOpen).toString());
+        trigger.setAttribute("aria-expanded", (!isOpen).toString());
+      });
+
+      // Close on outside click
+      document.addEventListener("click", (e) => {
+        if (!dropdown.contains(e.target as Node)) {
+          dropdown.setAttribute("data-open", "false");
+          trigger.setAttribute("aria-expanded", "false");
+        }
+      });
+
+      // Close on escape key
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          dropdown.setAttribute("data-open", "false");
+          trigger.setAttribute("aria-expanded", "false");
+        }
+      });
+    });
+  }
+
+  // Initialize on page load
+  initDropdown();
+
+  // Re-initialize after navigation (for Astro view transitions)
+  document.addEventListener("astro:page-load", initDropdown);
+</script>

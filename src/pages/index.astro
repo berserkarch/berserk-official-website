@@ -6,14 +6,13 @@ import ArrowSeparator from "../components/ui/separator/ArrowSeparator.astro";
 import MainLayout from "@/layouts/MainLayout.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 ---
+
 <MainLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
   <HeroSection
     title="Berserk Arch"
     subtitle="A bleeding-edge, security-centric Arch-based Linux distribution crafted for hackers, developers, and nerds alike."
-    showCTA
-    primaryCTA={{ text: "Download", href: "https://drive.google.com/drive/folders/14sOpnU4iMUeivxWvj9rvctVFgGUbXiAq" }}
-    secondaryCTA={{ text: "Wiki", href: "https://wiki.berserkarch.xyz/" }}
   />
+  <!-- primaryCTA={{ text: "Download", href: "https://drive.google.com/drive/folders/14sOpnU4iMUeivxWvj9rvctVFgGUbXiAq" }} -->
 
   <section class="py-6">
     <ArrowSeparator />

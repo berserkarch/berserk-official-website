@@ -1,49 +1,50 @@
 ---
-import Button from "../ui/button/Button.astro";
-interface Cta {
-  text: string;
-  href: string;
-}
+import DownloadBtn from "../ui/button/DownloadBtn.astro";
 
 interface Props {
   title: string;
   subtitle?: string;
-  showCTA?: boolean;
-  primaryCTA?: Cta;
-  secondaryCTA?: Cta;
 }
 
-const {
-  title,
-  subtitle,
-  showCTA = false,
-  primaryCTA,
-  secondaryCTA
-} = Astro.props as Props;
+const { title, subtitle } = Astro.props as Props;
 ---
 
 <section class="w-full h-screen flex items-center -mt-10">
   <div class="mx-auto max-w-5xl px-4 text-center">
-    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground">
-      <span class="bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dark)] bg-clip-text text-transparent lg:text-8xl">{title}</span>
+    <h1
+      class="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground"
+    >
+      <span
+        class="bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dark)] bg-clip-text text-transparent lg:text-8xl"
+        >{title}</span
+      >
     </h1>
-    {subtitle && (
-      <p class="mt-4 text-lg md:text-xl text-[color:var(--color-text-secondary)] max-w-2xl mx-auto">
-        {subtitle}
-      </p>
-    )}
-    {showCTA && (primaryCTA || secondaryCTA) && (
-      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-        {primaryCTA && (
-          <Button href={primaryCTA.href} variant="primary" size="md">{primaryCTA.text}</Button>
-        )}
-        {secondaryCTA && (
-          <Button href={secondaryCTA.href} variant="secondary" size="md">{secondaryCTA.text}</Button>
-        )}
-      </div>
-    )}
+    {
+      subtitle && (
+        <p class="mt-4 text-lg md:text-xl text-[color:var(--color-text-secondary)] max-w-2xl mx-auto">
+          {subtitle}
+        </p>
+      )
+    }
+    <div
+      class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3"
+    >
+      <DownloadBtn
+        label="Download"
+        variant="primary"
+        size="md"
+        options={[
+          { text: "SourceForge", href: "https://drive.google.com/..." },
+          { text: "Google Drive", href: "https://drive.google.com/..." },
+        ]}
+      />
+      <a
+        class="inline-flex items-center justify-center rounded-lg font-semibold starwind-transition-colors no-underline px-4 py-2.5 text-base text-[var(--accent)] border border-[var(--accent)] bg-transparent hover:bg-[color:var(--color-accent-bg)]"
+        href="https://wiki.berserkarch.xyz/"
+        target="_blank"
+      >
+        Wiki
+      </a>
+    </div>
   </div>
-  
 </section>
-
-
